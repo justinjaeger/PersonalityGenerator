@@ -26,11 +26,15 @@ export const ADJECTIVES: Array<string> = [
 ];
 
 export const COLORS: Array<string> = [
-    'red',
-    'orange',
-    'yellow',
-    'green',
-    'blue',
-    'purple',
-    'pink',
+    '#58BC82',
+    '#FC7A57',
+    '#8377D1',
+    '#6D5A72',
+    '#119DA4',
+    '#2D3047',
+    '#8E3B46',
+    '#668F80',
+    '#13505B',
+    '#73956F',
+    '#89023E',
 ]
