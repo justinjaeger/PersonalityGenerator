@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import SpinningWheel from "./components/SpinningWheel";
 
 const App = () => {
