@@ -1,82 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, Animated, Text, Easing, TouchableOpacity } from "react-native";
-import { ADJECTIVES, COLORS, WHEEL_SIZE } from "./constants";
+import { ADJECTIVES, COLORS, FOUR, START_VAL, WHEEL_SIZE } from "./constants";
 import { styles } from "./styles";
 import Slice, { iSlice } from "./Slice";
-
-const START_VAL = 0;
-const FOUR = 4;
-const MIN_VAL_TO_INCREASE_BY = 0.25;
-const BOTTOM_RELATIVE_TO_START = 3;
+import { useSpinningWheel } from "./useSpinningWheel";
 
 const SpinningWheel = () => {
   const spinValue = useRef(new Animated.Value(START_VAL)).current;
 
-  const [slices, setSlices] = useState<Array<iSlice>>(
-    Array.from(Array(FOUR)).map((x, i) => ({
-      color: COLORS[i],
-      text: ADJECTIVES[i],
-    }))
-  );
-  const [adjectivesPointer, setAdjectivesPointer] = useState<number>(FOUR);
-  const [colorsPointer, setColorsPointer] = useState<number>(FOUR);
-  const [currWheelValue, setCurrWheelValue] = useState<number>(START_VAL);
-  const [bottom, setBottom] = useState<number>(BOTTOM_RELATIVE_TO_START);
-  const [result, setResult] = useState<string>("");
-
-  // determines which quadrant is on the bottom
-  useEffect(() => {
-    spinValue.addListener(({ value }) => {
-      const val = Math.round(value * FOUR) / FOUR;
-      const lastTwoDigits = (val % 1) * 100; // 0, 25, 50, 75
-      setBottom(lastTwoDigits / ((1 / FOUR) * 100)); // 0-3
-    });
-  });
-
-  // assigns a new value to the bottom whenever bottom changes
-  useEffect(() => {
-    setAdjectivesPointer((prev) => {
-      const newVal = prev + 1;
-      if (!ADJECTIVES[newVal]) return 0;
-      return newVal;
-    });
-    setColorsPointer((prev) => {
-      const newVal = prev + 1;
-      if (!COLORS[newVal]) return 0;
-      return newVal;
-    });
-    setSlices((prevSlices) => ({
-      ...prevSlices,
-      [bottom]: {
-        ...prevSlices[bottom],
-        text: ADJECTIVES[adjectivesPointer],
-        color: COLORS[colorsPointer],
-      },
-    }));
-  }, [bottom]);
-
-  const onSpin = () => {
-    const randomFactor = (Math.floor(Math.random() * FOUR) + 1) * (1 / FOUR); // 0.25, 0.5, 0.75, 1
-    const newWheelVal = currWheelValue + MIN_VAL_TO_INCREASE_BY + randomFactor;
-    setCurrWheelValue(newWheelVal); // lets the wheel continue from its current position
-    Animated.timing(spinValue, {
-      toValue: newWheelVal,
-      duration: 3000,
-      useNativeDriver: true,
-      easing: Easing.bezier(0.03, -0.02, 0.24, 0.99), // Use a different easing function here
-    }).start(() => {
-      // fires when spin is over
-      // though not changing setAdjectivesPointer, must use syntax to get the latest "ap" value & set result
-      setAdjectivesPointer((ap) => {
-        const threeBehind = ap - BOTTOM_RELATIVE_TO_START;
-        const top =
-          ADJECTIVES[threeBehind] ||
-          ADJECTIVES[threeBehind + ADJECTIVES.length];
-        setResult(top);
-        return ap;
-      });
-    });
-  };
+  const { result, slices, bottomSliceIndex, onSpin } =
+    useSpinningWheel(spinValue);
 
   const spin = spinValue.interpolate({
     inputRange: [0, 1],
@@ -102,7 +35,7 @@ const SpinningWheel = () => {
         <Text style={{ color: "white", fontWeight: "700" }}>Spin me</Text>
       </TouchableOpacity>
       <Text style={{ textAlign: "center" }}>
-        New bottom: {JSON.stringify(slices[bottom])}
+        New bottom: {JSON.stringify(slices[bottomSliceIndex])}
       </Text>
       <View style={[styles.wheelContainer]}>
         <Animated.View
