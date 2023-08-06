@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { View, Animated, Text, TouchableOpacity } from "react-native";
-import { FOUR, START_VAL, WHEEL_SIZE } from "./constants";
+import { START_VAL, WHEEL_SIZE } from "./constants";
 import { styles } from "./styles";
 import Slice from "./Slice";
 import { useSpinningWheel } from "./useSpinningWheel";
@@ -43,22 +43,22 @@ const SpinningWheel = () => {
         >
           <Slice
             slice={slices[0]}
-            angle={(360 / FOUR) * 1.5}
+            angle={(360 / 4) * 1.5}
             style={{ left: WHEEL_SIZE, top: WHEEL_SIZE }}
           />
           <Slice
             slice={slices[1]}
-            angle={(360 / FOUR) * 0.5}
+            angle={(360 / 4) * 0.5}
             style={{ left: WHEEL_SIZE, top: 0 }}
           />
           <Slice
             slice={slices[2]}
-            angle={-((360 / FOUR) * 0.5)}
+            angle={-((360 / 4) * 0.5)}
             style={{ left: 0, top: 0 }}
           />
           <Slice
             slice={slices[3]}
-            angle={(360 / FOUR) * 2.5}
+            angle={(360 / 4) * 2.5}
             style={{ left: 0, top: WHEEL_SIZE }}
           />
         </Animated.View>

@@ -2,7 +2,6 @@ export const SLICE_COLORS: Array<string> = ["red", "pink", "green", "blue"];
 
 export const WHEEL_SIZE: number = 300;
 export const START_VAL = 0;
-export const FOUR = 4;
 
 export const ADJECTIVES: Array<string> = [
     "adorable",

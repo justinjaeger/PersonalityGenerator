@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { iSlice } from "./Slice";
-import { ADJECTIVES, COLORS, FOUR, START_VAL } from "./constants";
+import { ADJECTIVES, COLORS, START_VAL } from "./constants";
 import { Animated, Easing } from "react-native";
 
 const MIN_VAL_TO_INCREASE_BY = 0.25;
@@ -8,13 +8,13 @@ const BOTTOM_RELATIVE_TO_START = 3;
 
 export const useSpinningWheel = (spinValue: Animated.Value) => {
   const [slices, setSlices] = useState<Array<iSlice>>(
-    Array.from(Array(FOUR)).map((x, i) => ({
+    Array.from(Array(4)).map((x, i) => ({
       color: COLORS[i],
       text: ADJECTIVES[i],
     }))
   );
-  const [adjectivesPointer, setAdjectivesPointer] = useState<number>(FOUR);
-  const [colorsPointer, setColorsPointer] = useState<number>(FOUR);
+  const [adjectivesPointer, setAdjectivesPointer] = useState<number>(4);
+  const [colorsPointer, setColorsPointer] = useState<number>(4);
   const [currWheelValue, setCurrWheelValue] = useState<number>(START_VAL);
   const [bottomSliceIndex, setBottomSliceIndex] = useState<number>(
     BOTTOM_RELATIVE_TO_START
@@ -24,9 +24,9 @@ export const useSpinningWheel = (spinValue: Animated.Value) => {
   // tracks the bottomSliceIndex
   useEffect(() => {
     spinValue.addListener(({ value }) => {
-      const val = Math.round(value * FOUR) / FOUR;
+      const val = Math.round(value * 4) / 4;
       const lastTwoDigits = (val % 1) * 100; // 0, 25, 50, 75
-      setBottomSliceIndex(lastTwoDigits / ((1 / FOUR) * 100)); // 0-3
+      setBottomSliceIndex(lastTwoDigits / ((1 / 4) * 100)); // 0-3
     });
   });
 
@@ -53,7 +53,7 @@ export const useSpinningWheel = (spinValue: Animated.Value) => {
   }, [bottomSliceIndex]);
 
   const onSpin = () => {
-    const randomFactor = (Math.floor(Math.random() * FOUR) + 1) * (1 / FOUR); // 0.25, 0.5, 0.75, 1
+    const randomFactor = (Math.floor(Math.random() * 4) + 1) * (1 / 4); // 0.25, 0.5, 0.75, 1
     const newWheelVal = currWheelValue + MIN_VAL_TO_INCREASE_BY + randomFactor;
     setCurrWheelValue(newWheelVal); // lets the wheel continue from its current position
     Animated.timing(spinValue, {
