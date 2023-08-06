@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { Text, View } from "react-native";
+import SpinningWheel from "./components/SpinningWheel";
 
 const App = () => {
   return (
@@ -11,7 +12,7 @@ const App = () => {
         justifyContent: "center",
       }}
     >
-      <Text>Open up your asshole!</Text>
+      <SpinningWheel />
       <StatusBar style="auto" />
     </View>
   );
