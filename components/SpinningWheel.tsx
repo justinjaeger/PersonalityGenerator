@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
-import { View, Animated, Text, Easing, TouchableOpacity } from "react-native";
-import { ADJECTIVES, COLORS, FOUR, START_VAL, WHEEL_SIZE } from "./constants";
+import React, { useRef } from "react";
+import { View, Animated, Text, TouchableOpacity } from "react-native";
+import { FOUR, START_VAL, WHEEL_SIZE } from "./constants";
 import { styles } from "./styles";
-import Slice, { iSlice } from "./Slice";
+import Slice from "./Slice";
 import { useSpinningWheel } from "./useSpinningWheel";
 
 const SpinningWheel = () => {
