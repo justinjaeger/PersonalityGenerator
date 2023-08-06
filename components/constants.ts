@@ -25,6 +25,7 @@ export const ADJECTIVES: Array<string> = [
     "ass",
 ];
 
+// https://coolors.co/generate
 export const COLORS: Array<string> = [
     '#58BC82',
     '#FC7A57',

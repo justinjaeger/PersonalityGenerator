@@ -6,6 +6,7 @@ import {
   TouchableHighlight,
   Easing,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import { ADJECTIVES, COLORS, WHEEL_SIZE } from "./constants";
 
@@ -79,24 +80,25 @@ const SpinningWheel = () => {
   const [currWheelValue, setCurrWheelValue] = useState<number>(startValue);
   const [bottom, setBottom] = useState<Quadrant>(3);
   const [adjectivesPointer, setAdjectivesPointer] = useState<number>(3);
-  const [colorsPointer, setColorsPointer] = useState<number>(0);
+  const [colorsPointer, setColorsPointer] = useState<number>(3);
+  const [result, setResult] = useState<string>("");
   const [slices, setSlices] = useState<{
     [key in Quadrant]: iSlice;
   }>({
     1: {
-      color: "red",
+      color: COLORS[0],
       text: ADJECTIVES[0],
     },
     2: {
-      color: "blue",
+      color: COLORS[1],
       text: ADJECTIVES[1],
     },
     3: {
-      color: "orange",
+      color: COLORS[2],
       text: ADJECTIVES[2],
     },
     4: {
-      color: "purple",
+      color: COLORS[3],
       text: ADJECTIVES[3],
     },
   });
@@ -143,13 +145,23 @@ const SpinningWheel = () => {
   const onSpin = () => {
     const randomFactor = (Math.floor(Math.random() * 4) + 1) * 0.25; // 0.25, 0.5, 0.75, 1
     const newWheelVal = currWheelValue + minAmountToIncreaseBy + randomFactor;
-    setCurrWheelValue(newWheelVal);
+    setCurrWheelValue(newWheelVal); // lets the wheel continue from its current position
     Animated.timing(spinValue, {
       toValue: newWheelVal,
       duration: 3000, // Set the duration of the spinning animation
       useNativeDriver: true,
       easing: Easing.bezier(0.03, -0.02, 0.24, 0.99), // Use a different easing function here
-    }).start();
+    }).start(() => {
+      // must use this syntax to NOT access a stale value
+      setAdjectivesPointer((ap) => {
+        const threeBehind = ap - 3;
+        const top =
+          ADJECTIVES[threeBehind] ||
+          ADJECTIVES[threeBehind + ADJECTIVES.length];
+        setResult(top);
+        return ap;
+      });
+    });
   };
 
   const spin = spinValue.interpolate({
@@ -159,8 +171,24 @@ const SpinningWheel = () => {
 
   return (
     <>
-      <Text>
-        Bottom Color: {bottom} {slices[bottom].color}
+      {result ? (
+        <Text style={{ fontWeight: "700", fontSize: 20, marginBottom: 20 }}>
+          Your word is: {result}
+        </Text>
+      ) : null}
+      <TouchableOpacity
+        onPress={onSpin}
+        style={{
+          backgroundColor: "#8377D1",
+          padding: 20,
+          borderRadius: 10,
+          marginBottom: 20,
+        }}
+      >
+        <Text style={{ color: "white", fontWeight: "700" }}>Spin me</Text>
+      </TouchableOpacity>
+      <Text style={{ textAlign: "center" }}>
+        New bottom: {JSON.stringify(slices[bottom])}
       </Text>
       <View
         style={{
@@ -201,9 +229,6 @@ const SpinningWheel = () => {
           />
         </Animated.View>
       </View>
-      <TouchableHighlight onPress={onSpin}>
-        <Text>Spin me</Text>
-      </TouchableHighlight>
     </>
   );
 };
