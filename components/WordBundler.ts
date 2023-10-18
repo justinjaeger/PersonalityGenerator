@@ -1,29 +1,37 @@
-class WordBundler {
-    private wordFetcher: WordFetcher
+import { getNounToInsert, getAdjectivesToInsert} from './WordFetcher';
 
-    constructor() {
-        this.wordFetcher = new WordFetcher();
-    }
+type ChosenWords = {
+    "adjectives": Array<string>,
+    "noun": string
+}
+
+type Bundle = {
+    "todays_words": ChosenWords,
+    "sentence": string
+}
+ 
+export const wordBundler = () => {
+
+}
 
     public createBundle(): Object {
-        const chosen_words: any = this.chooseWords();
+        const chosen_words: ChosenWords = this.chooseWords();
         let bundle = {
-            "word_bank": this.wordFetcher.Adjectives.concat(this.wordFetcher.Nouns).sort,
             "todays_words": chosen_words,
             "sentence": this.createSentence(chosen_words)
         } 
         return bundle;
     }
 
-    public chooseWords(): Array<string> {
-        const adjectives: Array<string> = this.wordFetcher.getAdjectivesToInsert();
-        const todays_words: any = {
+    public chooseWords(): ChosenWords {
+        const adjectives: Array<string> = getAdjectivesToInsert();
+        const todays_words: ChosenWords = {
             "adjectives": adjectives,
             "noun": null
         };
         const useNounToday: Boolean = Math.random() > .5 ? true : false;
         if (useNounToday) {
-            todays_words.noun = this.wordFetcher.getNounToInsert();
+            todays_words.noun = getNounToInsert();
         }
         return todays_words;
     }
