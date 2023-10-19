@@ -4,11 +4,12 @@ import { START_VAL, WHEEL_SIZE } from "./constants";
 import { styles } from "./styles";
 import Slice from "./Slice";
 import { useSpinningWheel } from "./useSpinningWheel";
+import { WordBundler } from "./WordBundler";
 
 const SpinningWheel = () => {
   const spinValue = useRef(new Animated.Value(START_VAL)).current;
 
-  const { result, slices, bottomSliceIndex, onSpin } =
+  const { yourPersonality, slices, bottomSliceIndex, onSpin } =
     useSpinningWheel(spinValue);
 
   const spin = spinValue.interpolate({
@@ -18,9 +19,9 @@ const SpinningWheel = () => {
 
   return (
     <>
-      {result ? (
+      {yourPersonality ? (
         <Text style={{ fontWeight: "700", fontSize: 20, marginBottom: 20 }}>
-          Your word is: {result}
+          {yourPersonality}
         </Text>
       ) : null}
       <TouchableOpacity

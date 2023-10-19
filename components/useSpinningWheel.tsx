@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { iSlice } from "./Slice";
 import { ADJECTIVES, COLORS, START_VAL } from "./constants";
 import { Animated, Easing } from "react-native";
+import { WordBundler } from "./WordBundler";
 
 const MIN_VAL_TO_INCREASE_BY = 0.25;
 const BOTTOM_RELATIVE_TO_START = 3;
@@ -19,7 +20,7 @@ export const useSpinningWheel = (spinValue: Animated.Value) => {
   const [bottomSliceIndex, setBottomSliceIndex] = useState<number>(
     BOTTOM_RELATIVE_TO_START
   );
-  const [result, setResult] = useState<string>("");
+  const [yourPersonality, setYourPersonality] = useState<String>('');
 
   // tracks the bottomSliceIndex
   useEffect(() => {
@@ -33,6 +34,7 @@ export const useSpinningWheel = (spinValue: Animated.Value) => {
   // assigns a new value to the bottomSliceIndex whenever bottomSliceIndex changes
   useEffect(() => {
     setAdjectivesPointer((prev) => {
+      console.log('prev: ', prev)
       const newVal = prev + 1;
       if (!ADJECTIVES[newVal]) return 0;
       return newVal;
@@ -65,15 +67,19 @@ export const useSpinningWheel = (spinValue: Animated.Value) => {
       // fires when spin is over
       // though not changing setAdjectivesPointer, must use syntax to get the latest "ap" value & set result
       setAdjectivesPointer((ap) => {
+        console.log('ap: ', ap);
         const threeBehind = ap - BOTTOM_RELATIVE_TO_START;
         const top =
           ADJECTIVES[threeBehind] ||
           ADJECTIVES[threeBehind + ADJECTIVES.length];
-        setResult(top);
         return ap;
       });
+      setYourPersonality(() => {
+        const sentence = new WordBundler().getSentence();
+        return sentence;
+      })
     });
   };
 
-  return { result, onSpin, slices, bottomSliceIndex };
+  return { yourPersonality, onSpin, slices, bottomSliceIndex };
 };
