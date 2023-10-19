@@ -49,11 +49,20 @@ export class WordBundler {
         let sentence = '';
         if (useNounToday) {
             const noun = NOUNS[this.getRandomNumber(NOUNS.length)];
-            sentence = `You're a ${descriptors} ${noun} today`;
-            return sentence;
-        } 
-        sentence = `You're ${descriptors} today`;
+            if (this.isVowel(descriptors.charAt(0))) {
+                sentence = `You're a ${descriptors} ${noun} today`;
+            } else {
+                sentence = `You're an ${descriptors} ${noun} today`;
+
+            }
+        } else {
+            sentence = `You're ${descriptors} today`;
+        }
         return sentence;
+    }
+
+    public isVowel(character:string): Boolean{ 
+        if(character == "a"||"e"||"i"||"o"||"u") { return true } else { return false } 
     }
 
     public getAdjectivesToInsert(): Array<string> {
